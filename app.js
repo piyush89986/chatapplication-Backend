@@ -34,6 +34,7 @@ const corsOptions = {
 app.set('view engine', 'ejs');
 app.set('trust proxy', 1);
 app.use(cors(corsOptions))
+app.options("*", cors(corsOptions));
 app.use(logger(process.env.NODE_ENV === 'production' ? 'combined' : 'dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
