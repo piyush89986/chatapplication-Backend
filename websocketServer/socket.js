@@ -4,8 +4,9 @@ import messageModel from "../models/message.model.js";
 let io;
 
 export default function InitSocket(server) {
+    const normalizeOrigin = (value = "") => value.trim().replace(/\/$/, "");
     const allowedOrigins = process.env.CORS_ORIGIN
-        ? process.env.CORS_ORIGIN.split(",").map((origin) => origin.trim())
+        ? process.env.CORS_ORIGIN.split(",").map((origin) => normalizeOrigin(origin)).filter(Boolean)
         : [];
 
     io = new Server(server, {

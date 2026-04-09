@@ -13,14 +13,16 @@ import authRouter from './routes/auth.route.js';
 import chatRouter from './routes/chat.js'
 
 const app = express();
+const normalizeOrigin = (value = '') => value.trim().replace(/\/$/, '');
 const allowedOrigins = process.env.CORS_ORIGIN
-  ? process.env.CORS_ORIGIN.split(',').map((origin) => origin.trim())
+  ? process.env.CORS_ORIGIN.split(',').map((origin) => normalizeOrigin(origin)).filter(Boolean)
   : [];
 const corsOptions = {
   origin(origin, callback) {
     // Allow server-to-server tools and health checks without origin header.
     if (!origin) return callback(null, true);
-    if (allowedOrigins.length === 0 || allowedOrigins.includes(origin)) {
+    const requestOrigin = normalizeOrigin(origin);
+    if (allowedOrigins.length === 0 || allowedOrigins.includes(requestOrigin)) {
       return callback(null, true);
     }
     return callback(new Error('Not allowed by CORS'));
